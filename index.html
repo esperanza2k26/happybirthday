@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>February 5, 2026 🎂</title>
+    <title>For You | 05.02.2026</title>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
@@ -11,8 +11,11 @@
     <style>
         :root {
             --primary: #ff4d6d;
-            --bg: #0a0a0a;
+            --accent: #ff8fa3;
+            --bg: #050505;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0; background: var(--bg); color: white;
@@ -22,106 +25,126 @@
             overflow: hidden; text-align: center;
         }
 
-        .container {
-            z-index: 10; width: 92%; max-width: 450px; padding: 30px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 35px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
+        /* Animated Background */
+        .bg-glow {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a0b0e 0%, #050505 100%);
+            z-index: 1;
         }
 
+        .container {
+            z-index: 10; width: 90%; max-width: 400px; padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Date Badge */
         .date-badge {
-            display: inline-block; padding: 5px 15px; border-radius: 20px;
-            background: rgba(255, 77, 109, 0.15); color: var(--primary);
-            font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;
-            letter-spacing: 2px; border: 1px solid rgba(255, 77, 109, 0.3);
+            font-size: 0.7rem; letter-spacing: 3px; color: var(--accent);
+            text-transform: uppercase; margin-bottom: 15px; opacity: 0.8;
         }
 
         h1 {
-            font-family: 'Dancing Script', cursive; font-size: 2.8rem;
-            margin: 0 0 20px 0; background: linear-gradient(45deg, #ff4d6d, #ff8fa3);
+            font-family: 'Dancing Script', cursive; font-size: 3rem;
+            margin: 0 0 30px 0; line-height: 1;
+            background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
+        /* Video Container Optimized */
         .video-wrapper {
-            width: 100%; border-radius: 20px; overflow: hidden;
+            width: 100%; border-radius: 25px; overflow: hidden;
             background: #000; display: none;
-            box-shadow: 0 0 30px rgba(255, 77, 109, 0.2);
+            box-shadow: 0 0 40px rgba(255, 77, 109, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        video { width: 100%; display: block; max-height: 65vh; }
+        video { 
+            width: 100%; display: block; 
+            max-height: 60vh; /* Ideal for mobile viewing */
+        }
 
+        /* The Play Button */
         #play-btn {
             background: var(--primary); color: white; border: none;
-            padding: 20px 45px; font-size: 1.1rem; font-weight: 600;
-            border-radius: 50px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.5);
-            animation: float 3s ease-in-out infinite;
+            padding: 22px 50px; font-size: 1.2rem; font-weight: 600;
+            border-radius: 100px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.4);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        #play-btn:active { transform: scale(0.9); }
 
-        /* Ambient Glows */
-        .glow {
-            position: absolute; width: 300px; height: 300px;
-            background: var(--primary); filter: blur(150px);
-            opacity: 0.15; z-index: 1; pointer-events: none;
-        }
+        .hint { font-size: 0.8rem; margin-top: 20px; color: #666; }
+
+        /* Smooth reveal animation */
+        .reveal { animation: reveal 0.8s forwards; }
+        @keyframes reveal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div class="glow" style="top: -10%; left: -10%;"></div>
-    <div class="glow" style="bottom: -10%; right: -10%;"></div>
+    <div class="bg-glow"></div>
 
-    <div class="container">
-        <div class="date-badge">FEBRUARY 5, 2026</div>
-        <h1>Happy Birthday!</h1>
+    <div class="container" id="main-card">
+        <div class="date-badge">Feb 04, 2026</div>
+        <h1>Happy Birthday</h1>
         
         <div id="start-screen">
-            <p style="opacity: 0.7; margin-bottom: 30px;">A special memory is waiting...</p>
-            <button id="play-btn" onclick="openSurprise()">SEE SURPRISE 🎁</button>
+            <div style="font-size: 4rem; margin-bottom: 25px; filter: drop-shadow(0 0 10px var(--accent));">💝</div>
+            <button id="play-btn" onclick="launch()">Open Surprise</button>
+            <p class="hint">Tap to play with sound</p>
         </div>
 
         <div class="video-wrapper" id="video-wrapper">
-            <video id="main-video" playsinline controls>
+            <video id="main-video" playsinline controls preload="metadata">
                 <source src="video.mp4" type="video/mp4">
             </video>
         </div>
     </div>
 
-    <script>
-        function openSurprise() {
-            const startScreen = document.getElementById('start-screen');
-            const videoWrapper = document.getElementById('video-wrapper');
-            const video = document.getElementById('main-video');
+    <link rel="prefetch" href="video.mp4">
 
-            startScreen.style.display = 'none';
-            videoWrapper.style.display = 'block';
+    <script>
+        function launch() {
+            const start = document.getElementById('start-screen');
+            const wrapper = document.getElementById('video-wrapper');
+            const video = document.getElementById('main-video');
+            const card = document.getElementById('main-card');
+
+            // Switch views
+            start.style.display = 'none';
+            wrapper.style.display = 'block';
+            wrapper.classList.add('reveal');
             
+            // Play Video
             video.play();
 
-            // Explosive Confetti
-            var end = Date.now() + (4 * 1000);
-            var colors = ['#ff4d6d', '#ffffff', '#ff8fa3'];
+            // World-Class Confetti Blast
+            const duration = 4 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-            (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60, spread: 55, origin: { x: 0 }, colors: colors
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120, spread: 55, origin: { x: 1 }, colors: colors
-                });
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                
+                const particleCount = 40 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffffff']
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ff8fa3']
+                }));
+            }, 250);
         }
     </script>
 </body>
